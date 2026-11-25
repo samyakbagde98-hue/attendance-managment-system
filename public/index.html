@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attendance</title>
+<style>
+:root{--bg:#f4f6ff;--card:#fff;--ink:#20243a;--mut:#737b91;--line:#e7e9f2;--acc:#6658d3;--on:#fff;--okbg:#e5f7ef;--ok:#247a55;--lbg:#fff3dc;--l:#986400;--bbg:#ffebed;--b:#b13b4c;--shadow:0 16px 42px rgba(42,45,95,.09)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 8% 5%,rgba(163,151,255,.25),transparent 34%),radial-gradient(ellipse at 94% 90%,rgba(119,214,198,.22),transparent 34%),linear-gradient(135deg,#f7f7ff,#f4f8ff 55%,#f3fbfa);background-attachment:fixed}
+main{max-width:1050px;margin:0 auto;padding:28px 18px 56px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:24px}
+h1{font-size:1.55rem;margin:0;font-weight:800;letter-spacing:-.045em;background:linear-gradient(100deg,#6555cf,#438eae);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:1.12rem;margin:26px 0 10px;letter-spacing:-.02em}
+.card{background:rgba(255,255,255,.92);border:1px solid rgba(224,227,241,.9);border-radius:19px;padding:20px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}
+input,select{width:100%;padding:12px 13px;border:1px solid #e2e5f0;border-radius:11px;background:#fff;color:var(--ink);font:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+input:focus,select:focus{border-color:#9185e7;box-shadow:0 0 0 4px rgba(116,99,216,.12)}
+label{display:block;font-weight:650;margin:14px 0 6px;font-size:.92rem}
+button{font:inherit;cursor:pointer;transition:transform .16s,filter .16s,box-shadow .16s}button:hover{filter:brightness(.98)}button:active{transform:translateY(1px)}
+.pri{background:linear-gradient(110deg,#6658d3,#7b70e5);color:var(--on);border:0;border-radius:11px;padding:11px 17px;font-weight:700;box-shadow:0 7px 15px rgba(102,88,211,.2)}
+.stop{background:linear-gradient(110deg,#e07883,#cf5c71)}
+.ghost,.mini{border:1px solid var(--line);background:#f8f8fd;color:var(--ink);border-radius:9px;padding:6px 11px}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.row>*{flex:1;min-width:130px}
+.codebox{text-align:center;border:1px solid #e3e0ff;border-radius:16px;padding:20px;margin:16px 0;background:linear-gradient(125deg,#f0edff,#f0f6ff 58%,#eafaf7)}
+.code{font-size:clamp(2.5rem,12vw,4rem);font-weight:850;letter-spacing:.18em;margin:0;font-variant-numeric:tabular-nums;color:#6558c9}
+.mut{color:var(--mut);font-size:.9rem}.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem;min-width:600px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}th{color:var(--mut);font-weight:700;background:#fafaff}
+.pill{padding:3px 10px;border-radius:99px;font-size:.82rem;font-weight:650}.P{background:var(--okbg);color:var(--ok)}.L{background:var(--lbg);color:var(--l)}.A{background:var(--bbg);color:var(--b)}
+.msg{margin-top:12px;padding:12px;border-radius:11px;font-weight:600}[hidden]{display:none!important}:focus-visible{outline:3px solid #b8b0ff;outline-offset:2px}.codein{font-size:1.65rem;letter-spacing:.2em;text-align:center}
+/* Separate, simple student and teacher sign-in experiences */
+.login-wrap{max-width:790px;margin:5vh auto 0}.login-top{text-align:center;margin-bottom:22px}.login-top .eyebrow{display:inline-block;padding:5px 12px;border-radius:99px;background:#eeebff;color:#6558c9;font-size:.78rem;font-weight:750;letter-spacing:.04em;text-transform:uppercase}.login-top h2{font-size:1.9rem;margin:12px 0 4px;letter-spacing:-.05em}.login-top p{margin:0;color:var(--mut)}
+.login-card{display:grid;grid-template-columns: .92fr 1.08fr;overflow:hidden;padding:0;max-width:790px}.login-side{padding:30px 25px;color:white;display:flex;flex-direction:column;justify-content:space-between;min-height:390px;background:linear-gradient(145deg,#6658d3,#8176e5 60%,#6e9bd1)}.login-side.student{background:linear-gradient(145deg,#278f91,#48b6a7 58%,#83cbb6)}.login-side .side-tag{font-size:.8rem;opacity:.85}.login-side h3{font-size:1.7rem;line-height:1.15;letter-spacing:-.04em;margin:15px 0 9px}.login-side p{margin:0;opacity:.9}.side-orb{width:94px;height:94px;border-radius:30px;background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;font-size:2.7rem;transform:rotate(-8deg);box-shadow:0 12px 30px rgba(36,36,85,.12)}.login-form{padding:30px}.login-form h3{font-size:1.25rem;margin:0 0 4px}.role-switch{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:17px 0 19px}.role-choice{border:1px solid #e5e5f1;background:#fafaff;border-radius:12px;padding:11px 8px;text-align:center;color:#626a80;font-weight:700}.role-choice span{display:block;font-size:1.25rem;margin-bottom:2px}.role-choice.active.teacher{background:#f0edff;border-color:#9388e8;color:#5e50c4;box-shadow:inset 0 0 0 1px #9388e8}.role-choice.active.student{background:#e9f8f5;border-color:#6abeb0;color:#27877f;box-shadow:inset 0 0 0 1px #6abeb0}.login-submit{width:100%;margin-top:17px;padding:12px}#lerr{min-height:1.3em;margin:8px 0 0;color:#b13b4c}
+.auth-link{display:block;margin:12px 0 0;text-align:center;color:#6558c9;font-weight:650;text-decoration:none}.auth-link:hover{text-decoration:underline}.login-side.student+.login-form .auth-link{color:#27877f}#lerr.success{color:var(--ok)}#rerr{min-height:1.3em;margin:8px 0 0;color:#b13b4c}
+@media(max-width:650px){main{padding:16px 12px 36px}.card{padding:15px}.row>*{min-width:100%}header{margin-bottom:15px}.login-wrap{margin:2vh auto 0}.login-card{grid-template-columns:1fr}.login-side{min-height:180px;padding:22px}.login-side .side-orb{width:58px;height:58px;border-radius:19px;font-size:1.8rem}.login-side h3{font-size:1.35rem;margin:8px 0 4px}.login-form{padding:22px}.login-top h2{font-size:1.6rem}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Attendance</h1><div><span id="who" class="mut"></span> <button id="out" class="ghost" hidden>Log out</button></div></header>
+
+<section id="login" class="login-wrap">
+  <div class="login-top"><span class="eyebrow">Your classroom, one tap away</span><h2>Welcome to attendance!</h2><p>Choose how you want to sign in.</p></div>
+  <div class="card login-card">
+    <div class="login-side" id="loginSide"><div><span class="side-tag">HEY THERE 👋</span><h3 id="sideTitle">Ready to take the class?</h3><p id="sideCopy">Sign in to start an attendance session and keep things on track.</p></div><div class="side-orb" id="sideOrb" aria-hidden="true">✦</div></div>
+    <div class="login-form">
+      <h3 id="formTitle">Teacher sign in</h3><p class="mut" id="formCopy">Use your teacher ID to continue.</p>
+      <div class="role-switch" aria-label="Choose account type">
+        <button type="button" class="role-choice active teacher" id="teacherChoice" aria-pressed="true"><span>🧑‍🏫</span>Teacher</button>
+        <button type="button" class="role-choice" id="studentChoice" aria-pressed="false"><span>🎒</span>Student</button>
+      </div>
+      <form id="lf">
+        <label for="roll" id="rollLabel">Teacher ID</label><input id="roll" autocomplete="username" placeholder="e.g. T01" required>
+        <label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+        <button class="pri login-submit" id="loginSubmit">Let's go <span aria-hidden="true">→</span></button>
+        <p id="lerr" role="status"></p>
+        <a class="auth-link" href="#register" id="signupLink">Don't have an account? Sign Up</a>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="register" class="login-wrap" hidden>
+  <div class="login-top"><span class="eyebrow">Join your classroom</span><h2 id="registerTitle">Create your teacher account</h2><p>Fill in your details to get started.</p></div>
+  <div class="card login-card">
+    <div class="login-side" id="registerSide"><div><span class="side-tag">WELCOME ABOARD</span><h3 id="registerSideTitle">Your classroom, all in one place.</h3><p id="registerSideCopy">Create an account to manage attendance with ease.</p></div><div class="side-orb" aria-hidden="true">✦</div></div>
+    <div class="login-form">
+      <h3 id="registerFormTitle">Teacher sign up</h3><p class="mut">Your details are kept with your attendance account.</p>
+      <form id="rf">
+        <label for="ridentifier" id="registerIdLabel">Teacher ID</label><input id="ridentifier" required autocomplete="username">
+        <label for="rname">Full Name</label><input id="rname" required autocomplete="name">
+        <label for="remail">Email Address</label><input id="remail" type="email" required autocomplete="email">
+        <label for="rdepartment">Department</label><input id="rdepartment" required>
+        <div id="classDivisionField" hidden><label for="rclassDivision">Class / Division</label><input id="rclassDivision"></div>
+        <label for="rpassword">Password</label><input id="rpassword" type="password" required autocomplete="new-password">
+        <label for="rconfirmPassword">Confirm Password</label><input id="rconfirmPassword" type="password" required autocomplete="new-password">
+        <button class="pri login-submit" id="registerSubmit">Create account</button>
+        <p id="rerr" role="status"></p>
+      </form>
+      <a class="auth-link" href="#login" id="backLogin">Already have an account? Login</a>
+    </div>
+  </div>
+</section>
+
+<section id="t" hidden>
+  <div class="card">
+    <div class="row">
+      <input id="subj" placeholder="Subject, e.g. Data Structures" aria-label="Subject">
+      <select id="mins" aria-label="Session length"><option value="10">Open for 10 min</option><option value="20">20 min</option><option value="30">30 min</option></select>
+      <button id="start" class="pri">Start attendance</button>
+      <button id="end" class="pri stop" hidden>End attendance</button>
+    </div>
+    <div class="codebox"><p class="code" id="code">······</p><p class="mut" id="hint">Start a session to show the code.</p></div>
+    <div class="scroll"><table><thead><tr><th>Roll</th><th>Name</th><th>Status</th><th>Address</th><th>Time</th><th>Override</th><th>Phone</th></tr></thead><tbody id="rows"></tbody></table></div>
+  </div>
+  <h2>Attendance report</h2>
+  <div class="card"><div class="scroll"><table><thead><tr><th>Roll</th><th>Name</th><th>Subject</th><th>Attended</th><th>%</th></tr></thead><tbody id="rep"></tbody></table></div>
+  <p><button id="csv" class="ghost">Download CSV</button></p></div>
+</section>
+
+<section id="s" hidden>
+  <div class="card" style="max-width:480px">
+    <label for="cin">Session code from your teacher’s screen</label>
+    <input id="cin" class="codein" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="off">
+    <p><button id="mark" class="pri">Mark me present</button></p>
+    <div id="msg" class="msg" hidden role="status"></div>
+  </div>
+  <h2>My attendance</h2>
+  <div class="card"><table style="min-width:0"><thead><tr><th>Subject</th><th>Attended</th><th>%</th></tr></thead><tbody id="mine"></tbody></table></div>
+</section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NAMES = {P:'Present', L:'Late', A:'Absent'};
+let token = sessionStorage.getItem('token'), role = sessionStorage.getItem('role'), name = sessionStorage.getItem('name'), live = null, timer = null, repData = [];
+let authMode = 'login', registerRole = 'teacher';
+let deviceId = localStorage.getItem('deviceId');
+if (!deviceId) { deviceId = Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join(''); localStorage.setItem('deviceId', deviceId); }
+
+async function api(p, m = 'GET', b) {
+  const r = await fetch('/api/' + p, { method: m, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }, body: b ? JSON.stringify(b) : undefined });
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401 && p !== 'login') logout();
+  if (!r.ok) throw new Error(d.error || 'Something went wrong.');
+  return d;
+}
+function logout() { sessionStorage.clear(); token = role = null; clearInterval(timer); show(); }
+function show() {
+  $('login').hidden = !!token || authMode !== 'login'; $('register').hidden = !!token || authMode !== 'register';
+  $('t').hidden = role !== 'teacher' || !token; $('s').hidden = role !== 'student' || !token;
+  $('out').hidden = !token; $('who').textContent = token ? name : '';
+  if (token && role === 'teacher') { poll(); timer = setInterval(poll, 1500); loadReport(); }
+  if (token && role === 'student') loadMine();
+}
+const pct = (a, t) => t ? Math.round(100 * (a || 0) / t) : 0;
+const pctCell = (a, t) => `<td style="color:${pct(a,t) < 75 ? 'var(--b)' : 'inherit'};font-weight:600">${pct(a, t)}%</td>`;
+
+let selectedRole = 'teacher';
+function chooseRole(next) {
+  selectedRole = next;
+  const teacher = next === 'teacher';
+  $('teacherChoice').className = 'role-choice' + (teacher ? ' active teacher' : '');
+  $('studentChoice').className = 'role-choice' + (!teacher ? ' active student' : '');
+  $('teacherChoice').setAttribute('aria-pressed', String(teacher));
+  $('studentChoice').setAttribute('aria-pressed', String(!teacher));
+  $('loginSide').className = 'login-side' + (teacher ? '' : ' student');
+  $('sideTitle').textContent = teacher ? 'Ready to take the class?' : 'Your classes, made simple.';
+  $('sideCopy').textContent = teacher ? 'Sign in to start an attendance session and keep things on track.' : 'Sign in, enter the class code and you’re all set.';
+  $('sideOrb').textContent = teacher ? '✦' : '✿';
+  $('formTitle').textContent = teacher ? 'Teacher sign in' : 'Student sign in';
+  $('formCopy').textContent = teacher ? 'Use your teacher ID to continue.' : 'Use your roll number to continue.';
+  $('rollLabel').textContent = teacher ? 'Teacher ID' : 'Roll number';
+  $('roll').placeholder = teacher ? 'e.g. T01' : 'e.g. 01';
+  $('loginSubmit').innerHTML = teacher ? 'Let’s go <span aria-hidden="true">→</span>' : 'Enter class <span aria-hidden="true">→</span>';
+  $('lerr').textContent = '';
+}
+$('teacherChoice').onclick = () => chooseRole('teacher');
+$('studentChoice').onclick = () => chooseRole('student');
+
+$('signupLink').onclick = e => { e.preventDefault(); openRegistration(selectedRole); };
+$('backLogin').onclick = e => {
+  e.preventDefault();
+  authMode = 'login'; chooseRole(registerRole); show();
+};
+function openRegistration(nextRole) {
+  registerRole = nextRole;
+  authMode = 'register';
+  const teacher = nextRole === 'teacher';
+  $('registerTitle').textContent = teacher ? 'Create your teacher account' : 'Create your student account';
+  $('registerFormTitle').textContent = teacher ? 'Teacher sign up' : 'Student sign up';
+  $('registerSide').className = 'login-side' + (teacher ? '' : ' student');
+  $('registerSideTitle').textContent = teacher ? 'Your classroom, all in one place.' : 'Your classes, made simple.';
+  $('registerSideCopy').textContent = teacher ? 'Create an account to manage attendance with ease.' : 'Create an account to keep up with your attendance.';
+  $('registerIdLabel').textContent = teacher ? 'Teacher ID' : 'Student Roll Number';
+  $('ridentifier').placeholder = teacher ? 'Enter your teacher ID' : 'Enter your roll number';
+  $('classDivisionField').hidden = teacher;
+  $('rclassDivision').required = !teacher;
+  $('rf').reset();
+  $('rerr').textContent = '';
+  show();
+}
+$('rf').onsubmit = async e => {
+  e.preventDefault();
+  const data = {
+    name: $('rname').value.trim(), email: $('remail').value.trim(),
+    department: $('rdepartment').value.trim(), password: $('rpassword').value,
+    confirmPassword: $('rconfirmPassword').value
+  };
+  if (registerRole === 'teacher') data.teacherId = $('ridentifier').value.trim();
+  else {
+    data.studentRoll = $('ridentifier').value.trim();
+    data.classDivision = $('rclassDivision').value.trim();
+  }
+  $('rerr').textContent = '';
+  try {
+    await api('register/' + registerRole, 'POST', data);
+    authMode = 'login'; chooseRole(registerRole);
+    $('lerr').classList.add('success');
+    $('lerr').textContent = 'Registration successful! Please log in with your new account.';
+    show();
+  } catch (x) { $('rerr').textContent = x.message; }
+};
+
+$('lf').onsubmit = async e => {
+  e.preventDefault();
+  $('lerr').classList.remove('success');
+  try {
+    const d = await api('login', 'POST', { roll: $('roll').value.trim(), password: $('pw').value, deviceId });
+    if (d.role !== selectedRole) {
+      $('lerr').textContent = selectedRole === 'teacher' ? 'That account is not a teacher account. Choose Student if needed.' : 'That account is not a student account. Choose Teacher if needed.';
+      return;
+    }
+    token = d.token; role = d.role; name = d.name;
+    sessionStorage.setItem('token', token); sessionStorage.setItem('role', role); sessionStorage.setItem('name', name);
+    $('lerr').textContent = ''; show();
+  } catch (x) { $('lerr').textContent = x.message; }
+};
+$('out').onclick = logout;
+
+// ---- Teacher ----
+$('start').onclick = async () => { await api('start', 'POST', { subject: $('subj').value || 'Class', minutes: $('mins').value }); poll(); };
+$('end').onclick = async () => { await api('end', 'POST'); await poll(); loadReport(); };
+async function poll() {
+  try { live = await api('live'); } catch (e) { return; }
+  const o = live.open;
+  $('start').hidden = o; $('end').hidden = !o;
+  $('code').textContent = o ? live.code : '······';
+  $('hint').textContent = o ? `${live.subject}. New code in ${live.left}s. Session closes in ${Math.ceil(live.endsIn / 60)} min.` : 'Start a session to show the code.';
+  $('rows').innerHTML = o ? live.rows.map(r => {
+    const st = r.status || 'A';
+    return `<tr><td>${esc(r.roll)}</td><td>${esc(r.name)}</td><td><span class="pill ${st}">${NAMES[st]}</span></td><td>${esc(r.ip || '-')}</td><td>${r.ts ? new Date(r.ts).toLocaleTimeString() : '-'}</td>
+    <td>${['P','L','A'].map(k => `<button class="mini" data-s="${r.id}" data-k="${k}" aria-label="Mark ${esc(r.name)} ${NAMES[k]}">${k}</button>`).join(' ')}</td>
+    <td>${r.bound ? `<button class="mini" data-u="${r.id}">Unbind</button>` : '-'}</td></tr>`;
+  }).join('') : '';
+}
+$('rows').onclick = async e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.k) await api('record', 'PUT', { sessionId: live.id, studentId: +b.dataset.s, status: b.dataset.k });
+  if (b.dataset.u) await api('unbind', 'PUT', { studentId: +b.dataset.u });
+  poll();
+};
+async function loadReport() {
+  repData = await api('report');
+  $('rep').innerHTML = repData.map(r => `<tr><td>${esc(r.roll)}</td><td>${esc(r.name)}</td><td>${esc(r.subject)}</td><td>${r.attended || 0} / ${r.total}</td>${pctCell(r.attended, r.total)}</tr>`).join('')
+    || '<tr><td colspan="5" class="mut">No sessions yet. Start one above.</td></tr>';
+}
+$('csv').onclick = () => {
+  const csv = ['Roll,Name,Subject,Attended,Total,Percent', ...repData.map(r => [r.roll, `"${r.name}"`, `"${r.subject}"`, r.attended || 0, r.total, pct(r.attended, r.total)].join(','))].join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'attendance.csv'; a.click();
+};
+
+// ---- Student ----
+$('mark').onclick = async () => {
+  const m = $('msg'); m.hidden = false;
+  try {
+    const d = await api('mark', 'POST', { code: $('cin').value.trim() });
+    m.style.cssText = 'background:var(--okbg);color:var(--ok)';
+    m.textContent = `Marked ${NAMES[d.status].toLowerCase()} for ${d.subject}. Your address ${d.ip} was recorded.`;
+    $('cin').value = ''; loadMine();
+  } catch (x) { m.style.cssText = 'background:var(--bbg);color:var(--b)'; m.textContent = x.message; }
+};
+async function loadMine() {
+  const rows = await api('me');
+  $('mine').innerHTML = rows.map(r => `<tr><td>${esc(r.subject)}</td><td>${r.attended || 0} / ${r.total}</td>${pctCell(r.attended, r.total)}</tr>`).join('')
+    || '<tr><td colspan="3" class="mut">No classes recorded yet.</td></tr>';
+}
+show();
+</script>
+</body>
+</html>
